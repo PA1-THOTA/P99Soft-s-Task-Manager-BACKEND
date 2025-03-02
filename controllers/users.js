@@ -1,5 +1,6 @@
 const User = require("../models/users").usersSchema;
 const bcrypt = require("bcryptjs");
+const { validationResult } = require("express-validator");
 
 exports.getusers = (req, res, next) => {
   User.find({}, { username: 1, gmail: 1, designation: 1 })
@@ -37,6 +38,11 @@ exports.getusers = (req, res, next) => {
 // };
 
 exports.postuser = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors);
+    return res.json("error");
+  }
   User.find({ gmail: req.body.gmail })
     .then((result) => {
       if (result.length) {
