@@ -1,7 +1,7 @@
 const User = require("../models/users").usersSchema;
 
 exports.getusers = (req, res, next) => {
-  User.find({}, { username: 1, gmail: 1, designation: 1,password:1 })
+  User.find({}, { username: 1, gmail: 1, designation: 1 })
     .then((result) => res.json(result))
     .catch((err) => res.json(err));
 };
