@@ -1,4 +1,5 @@
 const User = require("../models/users").usersSchema;
+const bcrypt = require("bcryptjs");
 
 exports.getusers = (req, res, next) => {
   User.find({}, { username: 1, gmail: 1, designation: 1 })
