@@ -35,15 +35,41 @@ exports.postuser = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
+// exports.finduser = (req, res, next) => {
+//   User.find(
+//     { $and: [{ gmail: req.body.gmail }, { password: req.body.password }] },
+//     { username: 1, designation: 1 }
+//   )
+//     .then((result) => {
+//       if (result.length) {
+//         console.log("user found");
+//         res.json(result);
+//       } else {
+//         res.json("no user found");
+//       }
+//     })
+//     .catch((err) => console.log(err));
+// };
+
 exports.finduser = (req, res, next) => {
-  User.find(
-    { $and: [{ gmail: req.body.gmail }, { password: req.body.password }] },
-    { username: 1, designation: 1 }
-  )
+  // bcrypt.compare()
+  // User.find(
+  //   { $and: [{ gmail: req.body.gmail }, { password: req.body.password }] },
+  //   { username: 1, designation: 1 }
+  // )
+  User.find({ gmail: req.body.gmail })
     .then((result) => {
       if (result.length) {
-        console.log("user found");
-        res.json(result);
+        bcrypt
+          .compare(req.body.password, result[0].password)
+          .then((domatch) => {
+            if (domatch) {
+              console.log("user found");
+              res.json(result);
+            } else {
+              res.json("invalid email or password");
+            }
+          });
       } else {
         res.json("no user found");
       }
