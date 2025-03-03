@@ -116,16 +116,26 @@ exports.finduser = (req, res, next) => {
 };
 
 exports.edituser = (req, res, next) => {
-  User.updateOne(
-    { gmail: req.body.gmail },
-    {
-      $set: {
-        password: req.body.password,
-        designation: req.body.designation,
-      },
-    }
-  )
-    .then((result) => res.json({message:"User details edited successfully",result:result}))
+  bcrypt
+    .hash(req.body.password, 12)
+    .then((hashedpassword) => {
+      User.updateOne(
+        { gmail: req.body.gmail },
+        {
+          $set: {
+            password: hashedpassword,
+            designation: req.body.designation,
+          },
+        }
+      )
+        .then((result) =>
+          res.json({
+            message: "User details edited successfully",
+            result: result,
+          })
+        )
+        .catch((err) => console.log(err));
+    })
     .catch((err) => console.log(err));
 };
 
